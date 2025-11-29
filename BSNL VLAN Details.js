@@ -66,3 +66,50 @@ async function getVlans(numbers) {
   console.log(retval);
   return retval;
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////// GET CUSTOMER DETAILS //////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+async function getCustomerDetails(phoneNo) {
+  return await fetch(`http://localhost:8201/api/v1/bsnl/customerDetails`, {
+    method: 'POST',
+    body: JSON.stringify({ phoneNo }),
+    headers: {
+  'Content-Type': 'application/json'
+}
+  })
+    .then(res => res.json());
+}
+
+var values = [];
+var phoneNums = [
+"04286-297444",
+"04286-297911",
+"04286-297308",
+"",
+"04286-297515",
+"04286-297506",
+"04286-297633",
+"04286-297919",
+"",
+"",
+"",
+"04286-297757",
+"04286-252320",
+"04286-263221",
+"04286-266799"
+];
+
+// Below code will get the customer details for `phoneNums`
+for (var i = 0; i < phoneNums.length; i++) {
+    console.log(`Processing ${i + 1} of ${phoneNums.length}...`);
+    const ph = phoneNums[i];
+    const trimPh = ph.trim();
+    if (trimPh) {
+        const details = await getCustomerDetails(ph);
+        values.push(details?.data || {innerVlan: "", outerVlan: "" });
+    } else {
+        values.push({innerVlan: "", outerVlan: "" });
+    }
+}
+console.log('Done');
